@@ -8,8 +8,8 @@
 # }
 
 # Create an S3 bucket for static website hosting
-resource "aws_s3_bucket" "static_website" {
-  bucket = "Static-Website-Bucket-23456"
+resource "aws_s3_bucket" "staticWebsite" {
+  bucket = "staticwebsite226753"
 
   tags = {
     Name        = "Static Website"
@@ -18,25 +18,25 @@ resource "aws_s3_bucket" "static_website" {
 
 
 # Upload a the HTML file to the S3 bucket for static website hosting
-resource "aws_s3_object" "website" {
-  bucket = "Static-Website-Bucket-23456"
+resource "aws_s3_object" "staticWebsite" {
+  bucket = "staticwebsite226753"
   key    = "website.html"
   source = "Employee-Chart.html"
 }
 
 # Block all public access to the S3 bucket to enhance security for static website hosting
-resource "aws_s3_bucket_public_access_block" "static_website" {
-  bucket = aws_s3_bucket.static_website.id
+resource "aws_s3_bucket_public_access_block" "staticWebsite" {
+  bucket = aws_s3_bucket.staticWebsite.id
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 # Set a bucket policy to allow only read access to the S3 bucket for static website hosting
 resource "aws_s3_bucket_policy" "read_access" {
-  bucket = aws_s3_bucket.static_website.id
+  bucket = aws_s3_bucket.staticWebsite.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -44,7 +44,8 @@ resource "aws_s3_bucket_policy" "read_access" {
         Effect = "Allow"
         Principal = "*"
         Action = "s3:GetObject"
-        Resource = "${aws_s3_bucket.static_website.arn}/*"
+        Resource = ["${aws_s3_bucket.staticWebsite.arn}/*",
+                    "${aws_s3_bucket.staticWebsite.arn}"]
       }
     ]
   })
@@ -52,7 +53,7 @@ resource "aws_s3_bucket_policy" "read_access" {
 
 # Configure the S3 bucket for static website hosting for the uploaded HTML file
 resource "aws_s3_bucket_website_configuration" "example" {
-  bucket = aws_s3_bucket.static_website.id
+  bucket = aws_s3_bucket.staticWebsite.id
 
   index_document {
     suffix = "website.html"
@@ -61,6 +62,6 @@ resource "aws_s3_bucket_website_configuration" "example" {
 }
 # Output the website URL for the S3 static website hosting to access the uploaded HTML file
 output "website_url" {
-  value = aws_s3_bucket.static_website.website_endpoint
+  value = aws_s3_bucket.staticWebsite.website_endpoint
   description = "The URL to access the S3 static website"
 }
