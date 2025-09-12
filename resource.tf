@@ -20,8 +20,9 @@ resource "aws_s3_bucket" "staticWebsite" {
 # Upload a the HTML file to the S3 bucket for static website hosting
 resource "aws_s3_object" "staticWebsite" {
   bucket = "staticwebsite226753"
-  key    = "website.html"
-  source = "Employee-Chart.html"
+  key    = "index.html"
+  source = "index.html"
+  content_type = "text/html"
 }
 
 # Block all public access to the S3 bucket to enhance security for static website hosting
@@ -56,7 +57,7 @@ resource "aws_s3_bucket_website_configuration" "example" {
   bucket = aws_s3_bucket.staticWebsite.id
 
   index_document {
-    suffix = "website.html"
+    suffix = "index.html"
   }
 
 }
