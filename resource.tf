@@ -23,6 +23,7 @@ resource "aws_s3_object" "staticWebsite" {
   key    = "index.html"
   source = "index.html"
   content_type = "text/html"
+  depends_on = [ aws_s3_bucket.staticWebsite ]
 }
 
 # Block all public access to the S3 bucket to enhance security for static website hosting
